@@ -1,22 +1,26 @@
 import Phaser from "phaser";
+import PlayScene from "./scenes/PlayScene";
+
+const WIDTH = 800;
+const HEIGHT = 600;
+const BIRD_POSITION = { x: WIDTH * 0.1, y: HEIGHT * 0.5 };
+
+const SHARED_CONFIG = {
+  width: WIDTH,
+  height: HEIGHT,
+  startPosition: BIRD_POSITION,
+};
 
 const config = {
-  // WebGL (Web graphics library) JS Api for rendering 2D and 3D graphics
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  ...SHARED_CONFIG,
   physics: {
-    // Arcade physics plugin, manages physics simulation
     default: "arcade",
     arcade: {
       debug: true,
     },
   },
-  scene: {
-    preload,
-    create,
-    update,
-  },
+  scene: [new PlayScene(SHARED_CONFIG)],
 };
 
 const VELOCITY = 200;
@@ -34,18 +38,11 @@ const flapVelocity = 250;
 const initalBirdPosition = { x: config.width * 0.1, y: config.height / 2 };
 
 function preload() {
-  this.load.image("sky", "assets/sky.png");
-  this.load.image("bird", "assets/bird.png");
   this.load.image("pipe", "assets/pipe.png");
 }
 
 function create() {
   pipes = this.physics.add.group();
-  this.add.image(0, 0, "sky").setOrigin(0);
-  bird = this.physics.add
-    .sprite(initalBirdPosition.x, initalBirdPosition.y, "bird")
-    .setOrigin(0);
-  bird.body.gravity.y = 400;
 
   for (let i = 0; i < PIPES_TO_RENDER; i++) {
     const upperPipe = pipes.create(0, 0, "pipe").setOrigin(0, 1);
